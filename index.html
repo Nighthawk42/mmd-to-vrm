@@ -2,198 +2,375 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Converting MMD (.pmx) to VRM Models Guide</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+  <title>Converting MMD Models to VRM Models</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    /* Inline CSS */
-    body, h1, h2, h3, p, ul, ol, pre {
+    /* Reset and Base Styles */
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
+
     body {
-      font-family: 'Open Sans', sans-serif;
+      font-family: Arial, sans-serif;
       line-height: 1.6;
-      background-color: #f8f9fa;
+      background-color: #f9f9f9;
       color: #333;
-      padding: 20px;
+      padding-bottom: 100px; /* for footer spacing */
     }
+
     a {
-      color: #007bff;
+      color: #007BFF;
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 30px;
-      border: 1px solid #e5e5e5;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+
+    /* Header */
     header {
-      border-bottom: 1px solid #e5e5e5;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
+      background-color: #fff;
+      padding: 20px;
+      border-bottom: 1px solid #eaeaea;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
     }
+
     header h1 {
-      font-size: 2.2em;
-      margin-bottom: 5px;
+      font-size: 24px;
+      text-align: center;
     }
-    nav {
-      margin-top: 10px;
-      font-size: 0.9em;
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 250px;
+      height: calc(100% - 70px);
+      background-color: #2e3b4e;
+      padding-top: 20px;
+      overflow-y: auto;
     }
-    nav a {
-      margin-right: 15px;
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      padding: 10px 20px;
     }
-    h2 {
-      font-size: 1.8em;
-      margin: 20px 0 10px;
+
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #1a252f;
     }
-    h3 {
-      font-size: 1.4em;
-      margin: 15px 0 8px;
+
+    /* Main Content */
+    .content {
+      margin-left: 270px;
+      padding: 80px 20px 20px 20px;
+      max-width: 800px;
     }
-    p, li {
+
+    .content h2 {
+      color: #2e3b4e;
       margin-bottom: 10px;
     }
-    ul, ol {
-      margin-left: 20px;
-      margin-bottom: 15px;
+
+    .content h3 {
+      color: #3e4a5e;
+      margin-top: 20px;
+      margin-bottom: 10px;
     }
-    pre {
-      background: #f1f1f1;
-      padding: 10px;
-      overflow-x: auto;
-    }
-    .reminder {
-      border-left: 4px solid #ffc107;
-      background: #fff3cd;
-      padding: 10px 15px;
-      margin: 20px 0;
-    }
-    .screenshot {
+
+    .content img {
+      max-width: 100%;
+      height: auto;
       display: block;
       margin: 10px 0;
-      max-width: 100%;
-      border: 1px solid #ddd;
-      padding: 5px;
-      background: #fafafa;
     }
-    .step {
-      margin-bottom: 20px;
-    }
-    footer {
-      margin-top: 30px;
-      border-top: 1px solid #e5e5e5;
-      padding-top: 15px;
-      font-size: 0.9em;
-    }
+
+    /* Toggle Video Styles */
     .video-container {
-      display: none;
-      margin: 10px 0;
+      margin: 20px 0;
     }
+
     .toggle-btn {
-      background-color: #007bff;
+      background-color: #2e3b4e;
       color: #fff;
       border: none;
-      padding: 8px 12px;
+      padding: 10px 15px;
       cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-btn:hover {
+      background-color: #1a252f;
+    }
+
+    .video-content {
+      display: none;
+      transition: max-height 0.3s ease;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #fff;
+      border-top: 1px solid #eaeaea;
+      padding: 20px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
       font-size: 0.9em;
     }
-    .toggle-btn:hover {
-      background-color: #0056b3;
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .sidebar a {
+        float: left;
+      }
+      .content { margin-left: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Converting MMD (.pmx) to VRM Models</h1>
-      <p>This guide will help you learn the basics of converting MMD models (.pmx) into VRM models.</p>
-      <nav>
-        <a href="#requirements">Requirements</a>
-        <a href="#blender">Blender Setup</a>
-        <a href="#unity">Unity Setup</a>
-        <a href="#optional">Optional Configurations</a>
-      </nav>
-    </header>
+  <header>
+    <h1>Converting MMD Models to VRM Models</h1>
+  </header>
 
-    <!-- Requirements Section -->
+  <nav class="sidebar">
+    <a href="#introduction" class="active">Introduction</a>
+    <a href="#requirements">What You Need</a>
+    <a href="#conversion-process">Conversion Process</a>
+    <a href="#additional-resources">Additional Resources</a>
+    <a href="#conclusion">Conclusion</a>
+  </nav>
+
+  <main class="content">
+    <section id="introduction">
+      <h2>Introduction</h2>
+      <p>This guide will help you learn the basics of converting MMD models (.pmx) into VRM models.</p>
+    </section>
+
     <section id="requirements">
       <h2>What You Need</h2>
       <ul>
         <li>
           <strong>Blender</strong>
-          <ul>
-            <li><a href="https://store.steampowered.com/app/365670/Blender/" target="_blank">Steam download</a></li>
-            <li><a href="https://download.blender.org/release/Blender4.2/" target="_blank">Blender releases index</a></li>
-          </ul>
+          <br>
+          <a href="https://store.steampowered.com/app/365670/Blender/" target="_blank">Steam Download</a>
+          <br>
+          Once installed, go to properties and select the v4.2 - Stable - LTS Beta.
+          <br>
+          <a href="https://download.blender.org/release/Blender4.2/" target="_blank">Blender Releases Index</a>
+          <br>
+          Download and install the 4.2.5 MSI file.
+        </li>
+        <li>
+          <strong>Unofficial Cats Blender Plugin</strong>
+          <br>
+          <a href="https://github.com/teamneoneko/Cats-Blender-Plugin-Unofficial-" target="_blank">GitHub Download</a>
+          <br>
+          Follow the instructions on the page to download and install the plugin in Blender.
+        </li>
+        <li>
+          <strong>MMDTools</strong>
+          <br>
+          <a href="https://extensions.blender.org/add-ons/mmd-tools/" target="_blank">Blender.org Download</a>
+          <br>
+          Download and install as a plugin for Blender.
+        </li>
+        <li>
+          <strong>Material Combiner Addon</strong>
+          <br>
+          <a href="https://github.com/Grim-es/material-combiner-addon/" target="_blank">GitHub Download</a>
+          <br>
+          Download and install as a plugin for Blender.
         </li>
         <li>
           <strong>Unity</strong>
-          <ul>
-            <li><a href="https://unity.com/download" target="_blank">Unity Hub</a></li>
-          </ul>
+          <br>
+          <a href="https://unity.com/download" target="_blank">Unity Hub Download</a>
+          <br>
+          Open Unity Hub, go to installs, click install editor, and install the Unity 2022.3.55f1 editor.
+        </li>
+        <li>
+          <strong>UniVRM</strong>
+          <br>
+          <a href="https://github.com/vrm-c/UniVRM/releases" target="_blank">GitHub Download</a>
+          <br>
+          Download the latest 0.x Import/Export unitypackage. Once you've created a Unity project, drag and drop the unitypackage into the project to install the plugin.
+        </li>
+      </ul>
+      <p>Reminder: Make sure to save your progress to avoid losing it. :D</p>
+    </section>
+
+    <section id="conversion-process">
+      <h2>Conversion Process</h2>
+
+      <h3>1. Open Blender</h3>
+      <p>Make sure to delete the default cube! It's the most important step. :P</p>
+      <img src="images/image6.png" alt="Blender Interface">
+
+      <h3>2. Import MMD Model</h3>
+      <p>Select CATS on the toolbar, then click "Import Model" and select the model you want to import.</p>
+      <img src="images/image9.png" alt="Import Model">
+      <img src="images/image29.png" alt="Model in Blender">
+
+      <h3>3. Verify Textures</h3>
+      <p>Check if the textures imported correctly by changing the render mode to view the textures. Give some time for shaders to compile, as it can take a while depending on the model and your PC specs.</p>
+      <img src="images/image11.png" alt="View Textures">
+      <p>If everything looks good, press the "Fix MMD Model" button found under the MMD Options section of Cats Blender Plugin.</p>
+      <img src="images/image7.png" alt="Fix MMD Model">
+
+      <h3>4. Generate Texture Atlas</h3>
+      <p>Generate a material list by navigating to the Optimizations section of Cats Blender Plugin and clicking on "Generate Material List."</p>
+      <img src="images/image19.png" alt="Generate Material List">
+      <p>Select the files you want to use to generate the atlas. Note that some models may not work well with atlases, requiring you to troubleshoot by deselecting certain materials.</p>
+      <img src="images/image15.png" alt="Select Materials">
+      <p>Once ready, click on "Save Atlas To..." and save it in a designated folder.</p>
+
+      <h3>5. Export Model</h3>
+      <p>If the texture atlas was generated correctly and the model's visuals are satisfactory, proceed to export the model by navigating to "Quick Access" in Cats Blender Plugin and clicking "Export."</p>
+      <img src="images/image20.png" alt="Export Model">
+      <img src="images/image26.png" alt="Export Confirmation">
+      <p>You can ignore any warnings and continue to export the `.fbx` file. It's recommended to save it in the same folder as the texture atlas.</p>
+      <img src="images/image4.png" alt="Export FBX">
+
+      <h3>6. Unity Setup</h3>
+      <p>Open Unity Hub and create a new project using the appropriate template.</p>
+      <img src="images/image28.png" alt="Create Unity Project">
+      <p>Once the project is created and opened, drag the UniVRM unitypackage file into the Unity project to install the plugin. You should see two new tabs on the top bar.</p>
+      <img src="images/image1.png" alt="UniVRM Tabs">
+
+      <h3>7. Organize Project Assets</h3>
+      <p>Create folders within the `Assets` directory to organize files by type and model name. For example:</p>
+      <p><strong>Assets > [File Type] > [Model Name] > Materials and Textures</strong></p>
+      <img src="images/image14.png" alt="Organize Assets">
+      <p>This helps keep the project organized, especially when converting multiple models.</p>
+
+      <h3>8. Import Assets into Unity</h3>
+      <p>Drag the exported `.fbx` file and the texture atlas (or individual textures if atlas generation failed) into the corresponding model folder. Create materials by right-clicking inside the character folder, selecting <code>Create > Material</code>, and configuring them accordingly.</p>
+      <img src="images/image27.png" alt="Create Material">
+      <p>Rename the material appropriately, change the shader type to <code>VRM/MToon</code>, and set the rendering mode to <code>Cutout</code>.</p>
+      <img src="images/image25.png" alt="Set Shader">
+      <img src="images/image22.png" alt="Set Rendering Mode">
+      <p>Drag the texture atlas onto the material's texture slots and apply the material to the `.fbx` file.</p>
+      <img src="images/image21.png" alt="Apply Texture">
+      <img src="images/image13.png" alt="Lock Selection">
+      <p>Finally, drag the `.fbx` file into the hierarchy to view the model in the scene.</p>
+      <img src="images/image18.png" alt="Model in Unity">
+      <img src="images/image12.png" alt="Final Model">
+
+      <h3>9. Configure Rigging</h3>
+      <p>Select the `.fbx` file, go to the Rig tab, select <code>Humanoid</code> as the animation type, and apply the changes.</p>
+      <img src="images/image2.png" alt="Configure Rig">
+      <p>Click on <strong>Configure</strong>, unlock the window if necessary, and adjust the jaw bone settings. Apply the changes once configured.</p>
+      <img src="images/image23.png" alt="Configure Jaw Bone">
+
+      <h3>10. Export VRM Model</h3>
+      <div class="video-container">
+        <button class="toggle-btn" onclick="toggleVideo('video1')">HOW TO CONVERT FBX FROM BLENDER TO VRM</button>
+        <div id="video1" class="video-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/sSBFUj-D0U4?start=322" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="video-container">
+        <button class="toggle-btn" onclick="toggleVideo('video2')">ASK LIZZY - HOW TO PUT COLLIDERS TO A VRM AND SPRING BONES</button>
+        <div id="video2" class="video-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/3c60Uu5cawI?start=0" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <p>After configuring Spring Bones, colliders, and blendshapes, export the finished `.vrm` model by selecting the model in the hierarchy and clicking on <strong>Export VRM</strong>.</p>
+      <img src="images/image5.png" alt="Export VRM">
+      <p>Save the VRM inside the Unity project or drag and drop it from the file explorer into the project.</p>
+      <p>Once imported, organize the `.Prefab` file and apply the necessary configurations.</p>
+    </section>
+
+    <section id="additional-resources">
+      <h2>Additional Resources</h2>
+      <p>Here are some helpful video tutorials to assist you further:</p>
+      <ul>
+        <li>
+          <strong>
+            <a href="https://youtu.be/sSBFUj-D0U4?si=opG0IMFe91NrJ1W1&t=322" target="_blank">
+              HOW TO CONVERT FBX FROM BLENDER TO VRM
+            </a>
+          </strong>
+          - Starts at 5:22 and covers how to add Spring Bones and configure Blendshapes. Earlier parts also cover Unity setup.
+        </li>
+        <li>
+          <strong>
+            <a href="https://youtu.be/3c60Uu5cawI?si=IjZ7ujZ4rlcMV-_5" target="_blank">
+              ASK LIZZY - HOW TO PUT COLLIDERS TO A VRM AND SPRING BONES
+            </a>
+          </strong>
+          - Covers how to set up Spring Bones and colliders.
         </li>
       </ul>
     </section>
 
-    <!-- Blender Setup Section -->
-    <section id="blender">
-      <h2>Conversion Process in Blender</h2>
-      <div class="step">
-        <h3>1. Open Blender and Prepare the Scene</h3>
-        <p>Open Blender and delete the default cube. This is an important step!</p>
-        <img class="screenshot" src="images/image6.png" alt="Blender open window">
-      </div>
+    <section id="conclusion">
+      <h2>Conclusion</h2>
+      <p>Thank you for reading this guide! I hope it helps you in converting any MMD models you like. Most models should work with this method; however, some models have unconventional file structures for textures, resulting in incorrectly generated atlases. In such cases, you may need to manually apply textures to numerous materials in Unity using the original MMD model textures instead of a single material with a texture atlas.</p>
     </section>
+  </main>
 
-    <!-- Unity Setup Section -->
-    <section id="unity">
-      <h2>Conversion Process in Unity</h2>
-      <div class="step">
-        <h3>1. Set Up Your Unity Project</h3>
-        <p>Open Unity Hub and create (or open) a project using an appropriate template.</p>
-      </div>
-    </section>
-
-    <!-- Optional Features Section -->
-    <section id="optional">
-      <h2>Optional: Adding Spring Bones, Colliders, and Blendshapes</h2>
-      <p>These features add realism to your model.</p>
-      <button class="toggle-btn" onclick="toggleVideo('videoContainer1', this)">Show Video</button>
-      <div class="video-container" id="videoContainer1">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/sSBFUj-D0U4?start=322" title="Video guide" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </div>
-    </section>
-
-    <footer>
-      <p>&copy; <span id="year"></span>. All Rights Reserved.</p>
-    </footer>
-  </div>
+  <footer>
+    <p>
+      Written by QuestionableArachne | Page created by Nighthawk for the Desktop Mate Modding Community
+    </p>
+    <p>
+      <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>
+    </p>
+    <p id="copyright"></p>
+  </footer>
 
   <script>
-    // Inline JS
-    function toggleVideo(containerId, btn) {
-      const container = document.getElementById(containerId);
-      if (container.style.display === "none" || container.style.display === "") {
-        container.style.display = "block";
-        btn.textContent = "Hide Video";
+    // Toggle Video Function
+    function toggleVideo(id) {
+      var video = document.getElementById(id);
+      if (video.style.display === "block") {
+        video.style.display = "none";
       } else {
-        container.style.display = "none";
-        btn.textContent = "Show Video";
+        video.style.display = "block";
       }
     }
 
-    // Set dynamic year
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("year").textContent = new Date().getFullYear();
-    });
+    // Active Link Highlighting
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.sidebar a');
+
+    window.onscroll = () => {
+      let current = "";
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 80;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    };
+
+    // Dynamic Copyright
+    const year = new Date().getFullYear();
+    document.getElementById('copyright').innerHTML = `© ${year} Desktop Mate Modding Community`;
   </script>
 </body>
 </html>
