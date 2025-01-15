@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Converting MMD (.pmx) to VRM Models Guide</title>
+  <!-- Google Fonts for a modern sans-serif look -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+  <!-- Link to the external CSS file -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Converting MMD (.pmx) to VRM Models</h1>
+      <p>This guide will help you learn the basics of converting MMD models (.pmx) into VRM models.</p>
+      <nav>
+        <a href="#requirements">Requirements</a>
+        <a href="#blender">Blender Setup</a>
+        <a href="#unity">Unity Setup</a>
+        <a href="#optional">Optional Configurations</a>
+      </nav>
+    </header>
+
+    <!-- Requirements Section -->
+    <section id="requirements">
+      <h2>What You Need</h2>
+      <ul>
+        <li>
+          <strong>Blender</strong>
+          <ul>
+            <li>
+              <a href="https://store.steampowered.com/app/365670/Blender/" target="_blank">Steam download</a> – Once installed, go to properties and select <em>v4.2 - Stable - LTS Beta</em>.
+            </li>
+            <li>
+              <a href="https://download.blender.org/release/Blender4.2/" target="_blank">Blender releases index</a> – Download and install the 4.2.5 msi file.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Unofficial Cats Blender Plugin</strong>
+          <ul>
+            <li>
+              <a href="https://github.com/teamneoneko/Cats-Blender-Plugin-Unofficial-" target="_blank">Github download</a> – Follow the installation instructions.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>MMDTools</strong>
+          <ul>
+            <li>
+              <a href="https://extensions.blender.org/add-ons/mmd-tools/" target="_blank">Blender.org download</a> – Install as a Blender plugin.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Material Combiner Addon</strong>
+          <ul>
+            <li>
+              <a href="https://github.com/Grim-es/material-combiner-addon/" target="_blank">Github download</a> – Install as a Blender plugin.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Unity</strong>
+          <ul>
+            <li>Download and install <a href="https://unity.com/download" target="_blank">Unity Hub</a>.</li>
+            <li>
+              Open Unity Hub, go to Installs, click <em>Install Editor</em>, and install the <strong>Unity 2022.3.55f1</strong> editor.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>UniVRM</strong>
+          <ul>
+            <li>
+              <a href="https://github.com/vrm-c/UniVRM/releases" target="_blank">Github download</a> – Download the latest 0.x Import/Export unitypackage. Once you create a Unity project, simply drag and drop the unitypackage into it.
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="reminder">
+        <strong>Reminder:</strong> Make sure to save your progress so you don’t lose any work.
+      </div>
+    </section>
+
+    <!-- Blender Setup Section -->
+    <section id="blender">
+      <h2>Conversion Process in Blender</h2>
+      
+      <div class="step">
+        <h3>1. Open Blender and Prepare the Scene</h3>
+        <p>Open Blender and delete the default cube. This is an important step!</p>
+        <img class="screenshot" src="images/image6.png" alt="Blender open window">
+      </div>
+      
+      <div class="step">
+        <h3>2. Open the Cats Blender Plugin Tools</h3>
+        <p>Click on the small arrow on the side of the hierarchy area (below options) to open the Cats Plugin tools.</p>
+      </div>
+
+      <div class="step">
+        <h3>3. Import the MMD Model (.pmx)</h3>
+        <p>Select the <strong>CATS</strong> toolbar, click <em>Import Model</em>, and choose the desired MMD model.</p>
+        <img class="screenshot" src="images/image29.png" alt="Import MMD Model">
+      </div>
+
+      <div class="step">
+        <h3>4. Check Textures</h3>
+        <p>Click the two sphere icons in the top-right area to verify that textures have imported correctly. Allow time for shaders to compile.</p>
+      </div>
+
+      <div class="step">
+        <h3>5. Fix the MMD Model</h3>
+        <p>If the model appears correct, press the <strong>Fix MMD Model</strong> button under the <em>MMD Options</em> section.</p>
+        <img class="screenshot" src="images/image7.png" alt="Fix MMD Model">
+      </div>
+
+      <div class="step">
+        <h3>6. Generate a Texture Atlas</h3>
+        <p>
+          To simplify material application in Unity, generate a texture atlas:
+        </p>
+        <ol>
+          <li>Go to the Optimizations section in the Cats Blender Plugin.</li>
+          <li>Click <strong>Generate Material List</strong>.</li>
+          <li>Select the files to use (you may need to deselect some if issues occur).</li>
+          <li>Click <strong>Save Atlas</strong> and choose a dedicated folder.</li>
+        </ol>
+        <img class="screenshot" src="images/image19.png" alt="Generate Texture Atlas">
+      </div>
+
+      <div class="step">
+        <h3>7. Export the Model</h3>
+        <p>
+          Go to <strong>Quick Access</strong> in the Cats Blender Plugin and click <em>Export</em>. Ignore any warnings (click <strong>Continue to Export</strong>) and save the file as an <code>.fbx</code> in the same folder as your texture atlas.
+        </p>
+        <img class="screenshot" src="images/image20.png" alt="Export FBX">
+      </div>
+    </section>
+
+    <!-- Unity Setup Section -->
+    <section id="unity">
+      <h2>Conversion Process in Unity</h2>
+      
+      <div class="step">
+        <h3>1. Set Up Your Unity Project</h3>
+        <p>Open Unity Hub and create (or open) a project using an appropriate template.</p>
+        <p>
+          Once inside the project, drag the <strong>UniVRM</strong> unitypackage into the project. If installed correctly, two new tabs will appear on the top bar.
+        </p>
+        <pre>
+Assets/
+└── [file type]/
+    └── [model name]/
+        ├── Materials
+        └── Textures
+        </pre>
+      </div>
+
+      <div class="step">
+        <h3>2. Import Assets</h3>
+        <p>
+          Drag your exported <code>.fbx</code> file and the texture atlas (or individual textures) into your model’s folder. Then create a new material (right-click &gt; Create &gt; Material), rename it, set its shader to <code>VRM/MToon</code>, and change its rendering mode to <strong>Cutout</strong>.
+        </p>
+      </div>
+
+      <div class="step">
+        <h3>3. Apply Materials to the FBX</h3>
+        <p>
+          Select the <code>.fbx</code> file, navigate to its materials section, and drag the texture atlas onto its material slot. (Tip: Click the lock icon to keep the <code>.fbx</code> file selected.)
+        </p>
+      </div>
+
+      <div class="step">
+        <h3>4. Configure the Rig</h3>
+        <p>
+          Select the <code>.fbx</code> file, go to the Rig tab, choose <strong>Humanoid</strong> as the animation type, and click <strong>Apply</strong>.
+        </p>
+        <p>
+          Then click <strong>Configure</strong>, unlock the window if necessary, and set the <strong>Jaw</strong> bone to <em>None</em> (unless your model has a dedicated jaw bone).
+        </p>
+        <img class="screenshot" src="images/image2.png" alt="Configure Rig">
+      </div>
+
+      <div class="step">
+        <h3>5. Freeze T-Pose and Export VRM</h3>
+        <p>
+          Select your model in the hierarchy, go to the <strong>VRM0</strong> tab, and click <strong>VRM 0.x Freeze T-Pose</strong>. Then click <strong>Export VRM 0.x</strong>.
+        </p>
+        <p>
+          Save the VRM in a temporary folder within your Unity project. If you save it externally, drag the VRM file into the project. Once imported, the folder will contain a <code>.Prefab</code> along with its assets. Drag the <code>.Prefab</code> into your scene and hide the original <code>.fbx</code> file.
+        </p>
+      </div>
+    </section>
+
+    <!-- Optional Features Section with Embedded Videos -->
+    <section id="optional">
+      <h2>Optional: Adding Spring Bones, Colliders, and Blendshapes</h2>
+      <p>
+        These additional features add realism:
+      </p>
+      <ul>
+        <li><strong>Spring Bones:</strong> Add hair and clothing physics.</li>
+        <li><strong>Colliders:</strong> Prevent physics clipping (for example, hair colliding with the body).</li>
+        <li><strong>Blendshapes:</strong> Enable the model to display expressions.</li>
+      </ul>
+      <p>
+        For detailed instructions, view the video guides below.
+      </p>
+      
+      <!-- Video 1 Toggle -->
+      <button class="toggle-btn" id="toggleVideo1" onclick="toggleVideo('videoContainer1', 'toggleVideo1')">Show Video</button>
+      <div class="video-container" id="videoContainer1">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/sSBFUj-D0U4?start=322" title="HOW TO CONVERT FBX FROM BLENDER TO VRM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+      <!-- Video 2 Toggle -->
+      <button class="toggle-btn" id="toggleVideo2" onclick="toggleVideo('videoContainer2', 'toggleVideo2')">Show Video</button>
+      <div class="video-container" id="videoContainer2">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/3c60Uu5cawI" title="ask lizzy - How to Apply Colliders and Spring Bones" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+      <p>
+        After adding the optional features, select your model and click <strong>Export VRM</strong> to generate the final VRM model.
+      </p>
+    </section>
+
+    <footer>
+      <p id="copyright"></p>
+      <p>
+        This project is licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>.
+      </p>
+    </footer>
+  </div>
+  
+  <!-- Link to the external JavaScript file -->
+  <script src="scripts.js"></script>
+</body>
+</html>
